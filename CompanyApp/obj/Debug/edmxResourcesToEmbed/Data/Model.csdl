@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbSgsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Brigade">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="EmployeeInBrigade" Relationship="Self.FK_EmployeeInBrigade_Brigade" FromRole="Brigade" ToRole="EmployeeInBrigade" />
+  </EntityType>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_Company_City" FromRole="City" ToRole="Company" />
+    <NavigationProperty Name="Department" Relationship="Self.FK_Department_City" FromRole="City" ToRole="Department" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="CityId" Type="Int32" />
+    <Property Name="WorkingShift" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="City" Relationship="Self.FK_Company_City" FromRole="Company" ToRole="City" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CityId" Type="Int32" />
+    <NavigationProperty Name="City" Relationship="Self.FK_Department_City" FromRole="Department" ToRole="City" />
+    <NavigationProperty Name="DepartmentEmployee" Relationship="Self.FK_DepartmentEmployee_Department" FromRole="Department" ToRole="DepartmentEmployee" />
+  </EntityType>
+  <EntityType Name="DepartmentEmployee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="EmployeeId" Type="Int32" />
+    <Property Name="DepartmentId" Type="Int32" />
+    <NavigationProperty Name="Department" Relationship="Self.FK_DepartmentEmployee_Department" FromRole="DepartmentEmployee" ToRole="Department" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_DepartmentEmployee_Employee" FromRole="DepartmentEmployee" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="DepartmentEmployee" Relationship="Self.FK_DepartmentEmployee_Employee" FromRole="Employee" ToRole="DepartmentEmployee" />
+    <NavigationProperty Name="EmployeeInBrigade" Relationship="Self.FK_EmployeeInBrigade_Employee" FromRole="Employee" ToRole="EmployeeInBrigade" />
+  </EntityType>
+  <EntityType Name="EmployeeInBrigade">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="EmployeeId" Type="Int32" />
+    <Property Name="BrigadeId" Type="Int32" />
+    <NavigationProperty Name="Brigade" Relationship="Self.FK_EmployeeInBrigade_Brigade" FromRole="EmployeeInBrigade" ToRole="Brigade" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_EmployeeInBrigade_Employee" FromRole="EmployeeInBrigade" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_EmployeeInBrigade_Brigade">
+    <End Role="Brigade" Type="Self.Brigade" Multiplicity="0..1" />
+    <End Role="EmployeeInBrigade" Type="Self.EmployeeInBrigade" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Brigade">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmployeeInBrigade">
+        <PropertyRef Name="BrigadeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Company_City">
+    <End Role="City" Type="Self.City" Multiplicity="0..1" />
+    <End Role="Company" Type="Self.Company" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="City">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Company">
+        <PropertyRef Name="CityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Department_City">
+    <End Role="City" Type="Self.City" Multiplicity="0..1" />
+    <End Role="Department" Type="Self.Department" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="City">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Department">
+        <PropertyRef Name="CityId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DepartmentEmployee_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="DepartmentEmployee" Type="Self.DepartmentEmployee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DepartmentEmployee">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DepartmentEmployee_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="DepartmentEmployee" Type="Self.DepartmentEmployee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DepartmentEmployee">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeInBrigade_Employee">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="EmployeeInBrigade" Type="Self.EmployeeInBrigade" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmployeeInBrigade">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="dbSgsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Brigade" EntityType="Self.Brigade" />
+    <EntitySet Name="City" EntityType="Self.City" />
+    <EntitySet Name="Company" EntityType="Self.Company" />
+    <EntitySet Name="Department" EntityType="Self.Department" />
+    <EntitySet Name="DepartmentEmployee" EntityType="Self.DepartmentEmployee" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" />
+    <EntitySet Name="EmployeeInBrigade" EntityType="Self.EmployeeInBrigade" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <AssociationSet Name="FK_EmployeeInBrigade_Brigade" Association="Self.FK_EmployeeInBrigade_Brigade">
+      <End Role="Brigade" EntitySet="Brigade" />
+      <End Role="EmployeeInBrigade" EntitySet="EmployeeInBrigade" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Company_City" Association="Self.FK_Company_City">
+      <End Role="City" EntitySet="City" />
+      <End Role="Company" EntitySet="Company" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Department_City" Association="Self.FK_Department_City">
+      <End Role="City" EntitySet="City" />
+      <End Role="Department" EntitySet="Department" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DepartmentEmployee_Department" Association="Self.FK_DepartmentEmployee_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="DepartmentEmployee" EntitySet="DepartmentEmployee" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DepartmentEmployee_Employee" Association="Self.FK_DepartmentEmployee_Employee">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="DepartmentEmployee" EntitySet="DepartmentEmployee" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeInBrigade_Employee" Association="Self.FK_EmployeeInBrigade_Employee">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="EmployeeInBrigade" EntitySet="EmployeeInBrigade" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
